@@ -1,0 +1,11 @@
+import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+const [,, scale, out, pad] = process.argv;
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const page = await browser.newPage({ viewport: { width: 1440, height: 810 }, deviceScaleFactor: Number(scale), reducedMotion: 'reduce' });
+await page.goto('file:///home/user/Wedge/index.html');
+await page.waitForTimeout(1500);
+const y = await page.evaluate(() => { const el = document.querySelector('#agents'); el.scrollIntoView(); return el.getBoundingClientRect().top + scrollY; });
+await page.waitForTimeout(2500);
+await page.screenshot({ path: out, animations: 'disabled' });
+console.log('top', y);
+await browser.close();
